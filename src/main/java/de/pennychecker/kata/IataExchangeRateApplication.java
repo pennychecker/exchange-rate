@@ -6,10 +6,24 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.google.inject.Guice;
+
+import de.pennychecker.kata.assembler.Assembler;
+import de.pennychecker.kata.converter.ExchangeRateConverter;
+import de.pennychecker.kata.model.ExchangeRate;
+import de.pennychecker.kata.repo.IExchangeRatesRepo;
+
 public class IataExchangeRateApplication {
+	
+	private final IExchangeRatesRepo exchangeRepo;
+	
+	
+
+	public IataExchangeRateApplication() {
+		this.exchangeRepo = Guice.createInjector(new Assembler()).getInstance(IExchangeRatesRepo.class);
+	}
 
 	public void run() throws Exception {
-		readIataExchangeRates();
 
 		displayMenu();
 
@@ -24,10 +38,6 @@ public class IataExchangeRateApplication {
 		System.out.println("Auf Wiedersehen!");
 	}
 
-	private void readIataExchangeRates() {
-		// TODO: Hier muss das Einlesen der IATA-Währungskurse aus der Datei
-		// geschehen.
-	}
 
 	private void displayMenu() {
 		System.out.println("IATA Währungskurs-Beispiel");
@@ -64,16 +74,16 @@ public class IataExchangeRateApplication {
 		return false;
 	}
 
-	/**
-	 * SK aus csv  die 2. Spalte ausgeben ( dao currencyIsoCode und datum )
-	 * @throws Exception
-	 */
 	private void displayIataExchangeRate() throws Exception {
-		String currencyIsoCode = getUserInputForStringField("Währung");
+		String currencyIsoCode = getUserInputForStringField("Währung").toUpperCase();
 		Date date = getUserInputForDateField("Datum");
 
-		// TODO: Mit currencyIsoCode und date sollte hier der Kurs ermittelt und
-		// ausgegeben werden.
+		if ( this.exchangeRepo.exist(currencyIsoCode, date)) {
+			final ExchangeRate rate = this.exchangeRepo.find(currencyIsoCode,date);
+			System.out.println(new ExchangeRateConverter().convert(rate));
+		} else {
+			System.out.println("Der Währungskurs konnte nicht gefunden werden.");
+		}
 	}
 
 	private void enterIataExchangeRate() throws Exception {
@@ -82,8 +92,7 @@ public class IataExchangeRateApplication {
 		Date to = getUserInputForDateField("Bis");
 		Double exchangeRate = getUserInputForDoubleField("Euro-Kurs für 1 " + currencyIsoCode);
 
-		// TODO: Aus den Variablen muss jetzt ein Kurs zusammengesetzt und in
-		// die eingelesenen Kurse eingefügt werden.
+		this.exchangeRepo.add(currencyIsoCode,from,to,exchangeRate);
 	}
 
 	private String getUserInputForStringField(String fieldName) throws Exception {

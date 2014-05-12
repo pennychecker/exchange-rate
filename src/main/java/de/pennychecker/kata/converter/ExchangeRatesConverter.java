@@ -6,19 +6,18 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Range;
 import com.google.common.collect.Table;
 
-import de.pennychecker.kata.Country;
-import de.pennychecker.kata.ExchangeRates;
+import de.pennychecker.kata.model.ExchangeRates;
 
 public class ExchangeRatesConverter implements
-		Converter<Table<Country, Range<Long>, Double>, Map<Country, ExchangeRates>> {
+		Converter<Table<String, Range<Long>, Double>, Map<String, ExchangeRates>> {
 
-	public Map<Country, ExchangeRates> convert(Table<Country, Range<Long>, Double> exchangeRates) {
+	public Map<String, ExchangeRates> convert(Table<String, Range<Long>, Double> exchangeRates) {
 		return merge(exchangeRates);
 	}
 
-	private Map<Country, ExchangeRates> merge(Table<Country, Range<Long>, Double> csvExchangeRates) {
-		final Map<Country, ExchangeRates> countryExchangeRates = Maps.newHashMap();
-		for (Country country : csvExchangeRates.rowMap().keySet()) {
+	private Map<String, ExchangeRates> merge(Table<String, Range<Long>, Double> csvExchangeRates) {
+		final Map<String, ExchangeRates> countryExchangeRates = Maps.newHashMap();
+		for (String country : csvExchangeRates.rowMap().keySet()) {
 			final ExchangeRates exchangeRates = new ExchangeRates();
 			countryExchangeRates.put(country, exchangeRates);
 			for (Range<Long> longR : csvExchangeRates.row(country).keySet()) {

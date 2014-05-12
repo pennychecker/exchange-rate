@@ -9,7 +9,7 @@ import com.google.common.collect.Range;
 import com.google.common.collect.RangeMap;
 import com.google.common.collect.TreeRangeMap;
 
-import de.pennychecker.kata.ExchangeRates;
+import de.pennychecker.kata.model.ExchangeRates;
 
 public class PeriodTest {
 
