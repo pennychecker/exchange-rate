@@ -1,5 +1,7 @@
 /target
-<<<<<<< HEAD
 .classpath
+
 .project
+
 .settings
+/bin

@@ -2,7 +2,6 @@ package de.pennychecker.kata.repo;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Date;
 import java.util.Map;
 
 import org.joda.time.DateTime;

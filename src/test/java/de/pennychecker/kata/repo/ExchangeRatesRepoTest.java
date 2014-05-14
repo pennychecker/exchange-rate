@@ -48,7 +48,7 @@ public class ExchangeRatesRepoTest {
 		final Map<String, ExchangeRates> mockedExchangeRates = Maps.newHashMap();
 		mockedExchangeRates.put(currencyIso, new ExchangeRates(entries));
 
-		Mockito.when(this.repo.findExchangeRates()).thenReturn(mockedExchangeRates);
+		Mockito.when(this.repo.find()).thenReturn(mockedExchangeRates);
 
 	}
 

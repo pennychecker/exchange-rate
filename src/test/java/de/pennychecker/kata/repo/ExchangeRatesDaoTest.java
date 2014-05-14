@@ -2,19 +2,32 @@ package de.pennychecker.kata.repo;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Map;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.Range;
-import com.google.common.collect.Table;
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+
+import de.pennychecker.kata.assembler.Assembler;
+import de.pennychecker.kata.model.ExchangeRates;
 
 public class ExchangeRatesDaoTest {
+	
+	@Inject
+	private IExchangeRatesDao dao = new ExchangeRatesDao();
+	
+	@Before
+	public void setup() {
+		this.dao = Guice.createInjector(new Assembler()).getInstance(IExchangeRatesDao.class);
+	}
 
 	@Test
-	public void testConvert() throws IOException, ParseException {
-		Table<String, Range<Long>, Double> exchangeRates = new ExchangeRatesDao().find();
-		Assert.assertEquals(9, exchangeRates.size());
+	public void testFind() throws IOException, ParseException {
+		final Map<String, ExchangeRates> actual = dao.find();
+		Assert.assertEquals(4, actual.size());
 	}
 
 }
