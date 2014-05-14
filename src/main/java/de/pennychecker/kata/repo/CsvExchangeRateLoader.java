@@ -12,6 +12,7 @@ import org.joda.time.DateTime;
 import au.com.bytecode.opencsv.CSVReader;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Strings;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Range;
 import com.google.common.collect.Table;
@@ -24,10 +25,14 @@ public class CsvExchangeRateLoader implements ExchangeRateLoader {
 	public Table<String, Range<DateTime>, Double> load() throws IOException, ParseException {
 		final Table<String, Range<DateTime>, Double> csvExchangeRates = HashBasedTable.create();
 		for (String[] row : getExchangeRatesCsv().readAll()) {
-			final String currencyIsoCode = row[2];
-			final Double exchangeRateAmount = new Double(new DecimalFormat("#.##").parse(row[1]).doubleValue());
-			final Range<DateTime> exchangeRatePeriod = parsePeriodfrom(row);
-			csvExchangeRates.put(currencyIsoCode, exchangeRatePeriod, exchangeRateAmount);
+			final String commentCell = row[5];
+			if (Strings.isNullOrEmpty(commentCell)) {
+				final String currencyIsoCode = row[2];
+				final Double exchangeRateAmount = new Double(new DecimalFormat("#.##").parse(row[1]).doubleValue());
+				final Range<DateTime> exchangeRatePeriod = parsePeriodfrom(row);
+				csvExchangeRates.put(currencyIsoCode, exchangeRatePeriod, exchangeRateAmount);
+			}
+
 		}
 		return HashBasedTable.create(csvExchangeRates);
 	}
