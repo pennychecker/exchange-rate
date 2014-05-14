@@ -22,7 +22,7 @@ public class ExchangeRatesConverter implements
 			countryExchangeRates.put(country, exchangeRates);
 			for (Range<Long> longR : csvExchangeRates.row(country).keySet()) {
 				final Double amount = csvExchangeRates.get(country, longR);
-				exchangeRates.put(longR, amount);
+				exchangeRates.insert(longR, amount);
 			}
 		}
 		

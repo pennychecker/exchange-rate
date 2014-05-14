@@ -47,11 +47,16 @@ public class ExchangeRatesDao implements IExchangeRatesDao {
 	}
 
 	public void add(String currencyIsoCode, DateTime from, DateTime to, double exchangeRate) {
-		if (exchangeRates.containsKey(currencyIsoCode)) {
-			final ExchangeRates currencyExchangeRate = exchangeRates.get(currencyIsoCode);
+		final String iso = currencyIsoCode.toUpperCase();
+		if (exchangeRates.containsKey(iso)) {
+			final ExchangeRates currencyExchangeRate = exchangeRates.get(iso);
 			// ClosedOpen contains all values greater than or equal to lower and
 			// strictly less than upper.
 			currencyExchangeRate.insert(Range.closedOpen(from.getMillis(), to.plusDays(1).getMillis()), exchangeRate);
+		} else {
+			final ExchangeRates currencyExchangeRate = new ExchangeRates();
+			currencyExchangeRate.insert(Range.closedOpen(from.getMillis(), to.plusDays(1).getMillis()), exchangeRate);
+			exchangeRates.put(iso, currencyExchangeRate);
 		}
 	}
 

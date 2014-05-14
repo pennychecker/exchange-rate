@@ -23,10 +23,4 @@ public class ExchangeRates {
 		return ImmutableRangeMap.copyOf(exchangeRates);
 	}
 
-	public void put(Range<Long> arg0, Double arg1) {
-		exchangeRates.put(arg0, arg1);
-	}
-	
-	
-
 }
