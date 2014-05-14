@@ -6,10 +6,10 @@ import java.util.Date;
 import java.util.Map;
 
 import de.pennychecker.kata.model.ExchangeRate;
-import de.pennychecker.kata.model.ExchangeRates;
+import de.pennychecker.kata.model.ExchangeRatesWrapper;
 
 public interface IExchangeRatesRepo {
-	public Map<String, ExchangeRates> find() throws IOException, ParseException;
+	public Map<String, ExchangeRatesWrapper> find() throws IOException, ParseException;
 
 	public ExchangeRate find(String currencyIsoCode, Date date) throws IOException, ParseException;
 

@@ -2,6 +2,7 @@ package de.pennychecker.kata.converter;
 
 import java.util.Map;
 
+import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,23 +13,23 @@ import com.google.common.collect.RangeMap;
 import com.google.common.collect.Table;
 import com.google.common.collect.TreeRangeMap;
 
-import de.pennychecker.kata.model.ExchangeRates;
+import de.pennychecker.kata.model.ExchangeRatesWrapper;
 
 public class ExchangeRatesConverterTest {
 
-	private Map<String, ExchangeRates> exchangeRates;
+	private Map<String, ExchangeRatesWrapper> exchangeRates;
 	private final static String GERMANY = "DE";
-	private final static Range<Long> GERMANY_1 = Range.closedOpen(1l, 4l);
-	private final static Range<Long> GERMANY_2 = Range.closedOpen(5l, 8l);
+	private final static Range<DateTime> GERMANY_1 = Range.closedOpen(new DateTime(2010,1,1,0,0), new DateTime(2010,1,10,0,0));
+	private final static Range<DateTime> GERMANY_2 = Range.closedOpen(new DateTime(2010,1,10,0,0), new DateTime(2010,1,12,0,0));
 
 	@Before
 	public void setup() {
-		final Table<String, Range<Long>, Double> rates = HashBasedTable.create();
+		final Table<String, Range<DateTime>, Double> rates = HashBasedTable.create();
 		rates.put(GERMANY, GERMANY_1, 2d);
 		rates.put(GERMANY, GERMANY_2, 2d);
-		rates.put("AT", Range.closedOpen(5l, 8l), 3d);
+		rates.put("AT",Range.closedOpen(new DateTime(2010,1,5,0,0), new DateTime(2010,1,11,0,0)), 3d);
 
-		final Converter<Table<String, Range<Long>, Double>, Map<String, ExchangeRates>> merger = new ExchangeRatesConverter();
+		final Converter<Table<String, Range<DateTime>, Double>, Map<String, ExchangeRatesWrapper>> merger = new ExchangeRatesConverter();
 		this.exchangeRates = merger.convert(rates);
 	}
 
@@ -39,10 +40,10 @@ public class ExchangeRatesConverterTest {
 
 	@Test
 	public void testGermanyRanges() {
-		final ExchangeRates germanExchangeRates = exchangeRates.get(GERMANY);
-		final Map<Range<Long>, Double> actual = germanExchangeRates.entries().asMapOfRanges();
+		final ExchangeRatesWrapper germanExchangeRates = exchangeRates.get(GERMANY);
+		final Map<Range<DateTime>, Double> actual = germanExchangeRates.entries().asMapOfRanges();
 
-		final RangeMap<Long, Double> expected = TreeRangeMap.create();
+		final RangeMap<DateTime, Double> expected = TreeRangeMap.create();
 		expected.put(GERMANY_1, 2d);
 		expected.put(GERMANY_2, 2d);
 

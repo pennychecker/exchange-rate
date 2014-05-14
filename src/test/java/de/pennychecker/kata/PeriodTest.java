@@ -1,106 +1,49 @@
 package de.pennychecker.kata;
 
+import org.joda.time.DateTime;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableRangeMap;
 import com.google.common.collect.Range;
-import com.google.common.collect.RangeMap;
 import com.google.common.collect.TreeRangeMap;
-
-import de.pennychecker.kata.model.ExchangeRates;
 
 public class PeriodTest {
 
-	private ExchangeRates exchangeRates;
-
-	@Before
-	public void setup() {
-		final RangeMap<Long, Double> rangeSet = create("1-8", "13-19", "19-30", "37-66", "66-69", "69-85");
-		exchangeRates = new ExchangeRates(rangeSet);
-	}
-
 	@Test
-	public void insertWithoutOverlap() {
-		final RangeMap<Long, Double> expectedRanges = create("1-8", "9-12", "13-19", "19-30", "37-66", "66-69", "69-85");
-		final Range<Long> newRange = Range.closedOpen(9l, 12l);
+	public void test() {
 
-		assertRanges(expectedRanges, newRange);
+		final DateTime closedLower1 = new DateTime(2010, 1, 1, 0, 0);
+		final DateTime closedUpper1 = new DateTime(2010, 1, 10, 0, 0);
+
+		final DateTime closedLower2 = new DateTime(2010, 2, 1, 0, 0);
+		final DateTime closedUpper2 = new DateTime(2010, 2, 3, 0, 0);
+
+		final DateTime closedLower3 = new DateTime(2010, 5, 1, 0, 0);
+		final DateTime closedUpper3 = new DateTime(2010, 8, 1, 0, 0);
+
+		final TreeRangeMap<DateTime, Double> actual = TreeRangeMap.create();
+		actual.put(Range.closedOpen(closedLower1, closedUpper1), 1d);
+		actual.put(Range.closedOpen(closedLower2, closedUpper2), 1d);
+		actual.put(Range.closedOpen(closedLower3, closedUpper3), 1d);
+
+		actual.put(Range.closedOpen(new DateTime(2010, 1, 5, 0, 0), new DateTime(2010, 7, 20, 0, 0)), 1d);
+
+		final DateTime closedLower11 = new DateTime(2010, 1, 1, 0, 0);
+		final DateTime closedUpper11 = new DateTime(2010, 1, 5, 0, 0);
+
+		final DateTime closedLower22 = new DateTime(2010, 1, 5, 0, 0);
+		final DateTime closedUpper22 = new DateTime(2010, 7, 20, 0, 0);
+
+		final DateTime closedLower33 = new DateTime(2010, 7, 20, 0, 0);
+		final DateTime closedUpper33 = new DateTime(2010, 8, 1, 0, 0);
+
+		final TreeRangeMap<DateTime, Double> expected = TreeRangeMap.create();
+		expected.put(Range.closedOpen(closedLower11, closedUpper11), 1d);
+		expected.put(Range.closedOpen(closedLower22, closedUpper22), 1d);
+		expected.put(Range.closedOpen(closedLower33, closedUpper33), 1d);
+
+		Assert.assertEquals(expected, actual);
+
 	}
 
-	@Test
-	public void insertRangeWithExactLowerBoundOverlap() {
-		final RangeMap<Long, Double> expectedRanges = create("1-8", "8-12", "13-19", "19-30", "37-66", "66-69", "69-85");
-		final Range<Long> newRange = Range.closedOpen(8l, 12l);
-
-		assertRanges(expectedRanges, newRange);
-	}
-
-	@Test
-	public void insertRangeWithExactUpperBoundOverlap() {
-		final RangeMap<Long, Double> expectedRanges = create("1-8", "9-13", "13-19", "19-30", "37-66", "66-69", "69-85");
-		final Range<Long> newRange = Range.closedOpen(9l, 13l);
-
-		assertRanges(expectedRanges, newRange);
-	}
-
-	@Test
-	public void insertRangeWithExactUpperLowerBoundOverlap() {
-		final RangeMap<Long, Double> expectedRanges = create("1-8", "8-13", "13-19", "19-30", "37-66", "66-69", "69-85");
-		final Range<Long> newRange = Range.closedOpen(8l, 13l);
-
-		assertRanges(expectedRanges, newRange);
-	}
-
-	@Test
-	public void overlapLowerAndUpper() {
-		final RangeMap<Long, Double> expectedRanges = create("1-6", "6-10", "13-19", "19-30", "37-66", "66-69", "69-85");
-		final Range<Long> newRange = Range.closedOpen(6l, 10l);
-
-		assertRanges(expectedRanges, newRange);
-	}
-
-	@Test
-	public void overlapOverRange() {
-		final RangeMap<Long, Double> expectedRanges = create("1-8", "6-15", "15-19", "19-30", "37-66", "66-69", "69-85");
-		final Range<Long> newRange = Range.closedOpen(6l, 15l);
-
-		assertRanges(expectedRanges, newRange);
-	}
-
-	@Test
-	public void overlapUpperAndLowerBound() {
-		final RangeMap<Long, Double> expectedRanges = create("1-3", "3-80", "80-85");
-		final Range<Long> newRange = Range.closedOpen(3l, 80l);
-
-		assertRanges(expectedRanges, newRange);
-	}
-
-	private void assertRanges(final RangeMap<Long, Double> expectedRanges, final Range<Long> newRange) {
-		exchangeRates.insert(newRange, 1d);
-		final RangeMap<Long, Double> actualRanges = exchangeRates.entries();
-		Assert.assertEquals(expectedRanges, actualRanges);
-	}
-
-	/**
-	 * Helper method to create a RangeMap.
-	 * 
-	 * @param ranges
-	 *            should have the pattern e.g. "1-6"
-	 * @return RangeSet<Long>
-	 */
-	private RangeMap<Long, Double> create(String... ranges) {
-		final TreeRangeMap<Long, Double> rangeSet = TreeRangeMap.create();
-		for (String range : ranges) {
-			final String[] closedRange = range.split("-");
-			if (closedRange.length < 2) {
-				throw new IllegalArgumentException("Wrong range format: " + range);
-			}
-			final Long closedLower = Long.valueOf(closedRange[0]);
-			final Long closedUpper = Long.valueOf(closedRange[1]);
-			rangeSet.put(Range.closedOpen(closedLower, closedUpper), 1d);
-		}
-		return ImmutableRangeMap.copyOf(rangeSet);
-	}
 }

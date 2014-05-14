@@ -1,11 +1,11 @@
 package de.pennychecker.kata.model;
 
-import java.util.Date;
+import org.joda.time.DateTime;
 
 public class ExchangeRate {
 	private String currencyIso;
-	private Date begin;
-	private Date end;
+	private DateTime begin;
+	private DateTime end;
 	private Double amount;
 
 	public String getCurrencyIso() {
@@ -16,35 +16,20 @@ public class ExchangeRate {
 		this.currencyIso = currencyIso;
 	}
 
-	public Date getBegin() {
-		if (null != begin) {
-			return new Date(begin.getTime());
-		}
-		return null;
+	public DateTime getBegin() {
+		return begin;
 	}
 
-	public void setBegin(Date begin) {
-		if (null != begin) {
-			this.begin = new Date(begin.getTime());
-		} else {
-			this.begin = null;
-		}
+	public void setBegin(DateTime begin) {
+		this.begin = begin;
 	}
 
-	public Date getEnd() {
-		if (null != end) {
-			return new Date(end.getTime());
-		}
-		return null;
+	public DateTime getEnd() {
+		return end;
 	}
 
-	public void setEnd(Date end) {
-		if (null != end) {
-			this.end = new Date(end.getTime());
-		} else {
-			this.end = null;
-		}
-
+	public void setEnd(DateTime end) {
+		this.end = end;
 	}
 
 	public Double getAmount() {

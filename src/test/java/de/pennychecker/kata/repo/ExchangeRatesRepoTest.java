@@ -19,14 +19,14 @@ import com.google.inject.Injector;
 
 import de.pennychecker.kata.assembler.TestAssembler;
 import de.pennychecker.kata.model.ExchangeRate;
-import de.pennychecker.kata.model.ExchangeRates;
+import de.pennychecker.kata.model.ExchangeRatesWrapper;
 
 public class ExchangeRatesRepoTest {
 
 	private IExchangeRatesRepo repo;
 
-	private long rangeLower1 = new DateTime(2014, 2, 1, 0, 0).getMillis();
-	private long rangeUpper1 = new DateTime(2014, 2, 4, 0, 0).getMillis();
+	private DateTime rangeLower1 = new DateTime(2014, 2, 1, 0, 0);
+	private DateTime rangeUpper1 = new DateTime(2014, 2, 4, 0, 0);
 
 	private final static String currencyIso = "DE";
 
@@ -35,18 +35,18 @@ public class ExchangeRatesRepoTest {
 		final Injector injector = Guice.createInjector(new TestAssembler());
 		this.repo = injector.getInstance(IExchangeRatesRepo.class);
 
-		final long rangeLower = new DateTime(2013, 2, 1, 0, 0).getMillis();
-		final long rangeUpper = new DateTime(2013, 2, 4, 0, 0).getMillis();
-		final long rangeLower2 = new DateTime(2014, 2, 10, 0, 0).getMillis();
-		final long rangeUpper2 = new DateTime(2014, 2, 20, 0, 0).getMillis();
+		final DateTime rangeLower = new DateTime(2013, 2, 1, 0, 0);
+		final DateTime rangeUpper = new DateTime(2013, 2, 4, 0, 0);
+		final DateTime rangeLower2 = new DateTime(2014, 2, 10, 0, 0);
+		final DateTime rangeUpper2 = new DateTime(2014, 2, 20, 0, 0);
 
-		final RangeMap<Long, Double> entries = TreeRangeMap.create();
+		final RangeMap<DateTime, Double> entries = TreeRangeMap.create();
 		entries.put(Range.closedOpen(rangeLower, rangeUpper), 5d);
 		entries.put(Range.closedOpen(rangeLower1, rangeUpper1), 1d);
 		entries.put(Range.closedOpen(rangeLower2, rangeUpper2), 2d);
 
-		final Map<String, ExchangeRates> mockedExchangeRates = Maps.newHashMap();
-		mockedExchangeRates.put(currencyIso, new ExchangeRates(entries));
+		final Map<String, ExchangeRatesWrapper> mockedExchangeRates = Maps.newHashMap();
+		mockedExchangeRates.put(currencyIso, new ExchangeRatesWrapper(entries));
 
 		Mockito.when(this.repo.find()).thenReturn(mockedExchangeRates);
 
@@ -61,13 +61,13 @@ public class ExchangeRatesRepoTest {
 	@Test
 	public void testBegin() throws IOException, ParseException {
 		final ExchangeRate rate = getRate();
-		Assert.assertEquals(rangeLower1, rate.getBegin().getTime());
+		Assert.assertEquals(rangeLower1, rate.getBegin());
 	}
 
 	@Test
 	public void testEnd() throws IOException, ParseException {
 		final ExchangeRate rate = getRate();
-		Assert.assertEquals(rangeUpper1, rate.getEnd().getTime());
+		Assert.assertEquals(rangeUpper1, rate.getEnd());
 	}
 
 	@Test
