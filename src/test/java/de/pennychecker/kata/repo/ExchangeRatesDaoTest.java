@@ -1,4 +1,4 @@
-package de.pennychecker.kata;
+package de.pennychecker.kata.repo;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -13,7 +13,7 @@ public class ExchangeRatesDaoTest {
 
 	@Test
 	public void testConvert() throws IOException, ParseException {
-		Table<Country, Double, Range<Long>> exchangeRates = new ExchangeRatesDao().find();
+		Table<String, Range<Long>, Double> exchangeRates = new ExchangeRatesDao().find();
 		Assert.assertEquals(9, exchangeRates.size());
 	}
 

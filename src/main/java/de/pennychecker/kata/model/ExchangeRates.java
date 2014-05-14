@@ -1,4 +1,4 @@
-package de.pennychecker.kata;
+package de.pennychecker.kata.model;
 
 import com.google.common.collect.ImmutableRangeMap;
 import com.google.common.collect.Range;
