@@ -46,8 +46,8 @@ public class ExchangeRatesConverterTest {
 		final RangeMap<Long, Double> expected = TreeRangeMap.create();
 		expected.put(GERMANY_1, 2d);
 		expected.put(GERMANY_2, 2d);
-		actual.get(GERMANY)
-		Assert.assertEquals(, exchangeRates.get(GERMANY));
+	
+		Assert.assertEquals(exchangeRates.get(GERMANY),actual);
 	}
 
 }
