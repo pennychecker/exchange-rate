@@ -40,7 +40,7 @@
 	</dependencies>
 	<build>
 		<defaultGoal>package</defaultGoal>
-		<finalName>kata</finalName>
+		<finalName>exchange-rates</finalName>
 		<resources>
 			<resource>
 				<filtering>false</filtering>
