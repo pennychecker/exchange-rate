@@ -19,7 +19,7 @@ import com.google.common.collect.Table;
 
 public class CsvExchangeRateLoader implements ExchangeRateLoader {
 
-	private static final SimpleDateFormat SDF = new SimpleDateFormat("dd.MM.yyyy");
+	public static final SimpleDateFormat SDF = new SimpleDateFormat("dd.MM.yyyy");
 	public final static String FILE_NAME = "KursExport.csv";
 
 	public Table<String, Range<DateTime>, Double> load() throws IOException, ParseException {
